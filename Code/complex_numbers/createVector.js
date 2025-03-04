@@ -26,60 +26,96 @@ function createVector(data){
 
 /*********************************************************************************Changes */
 // Replace all arrow path definitions with circles
+
+
+// Update all marker creation blocks to use circles
+
+
+// Repeat similar changes for component and gray markers
 if(this.taskScreen == true && this.parent.parent_svg){
   this.parent.parent_svg.append("marker")
-    .attrs({ 
-      id: "arrow_"+this.vectorID, 
-      viewBox: "0 0 10 10",
-      refX: 9.3,  
-      refY: 5,
-      markerWidth: 4,
-      markerHeight: 4,
-      orient: "auto" 
-    })
-    .append("circle")
-    .attrs({ cx: 5, cy: 5, r: 3 })
-    .styles({ "stroke": this.vector_color, "fill": this.vector_color });
+  .attrs({ 
+    id: "arrow_"+this.vectorID, 
+    viewBox: "0 0 10 10",
+    refX: 9, 
+    refY: 5,
+    markerWidth: 6,
+    markerHeight: 6,
+    orient: "auto"
+  })
+  .append("circle")
+  .attrs({ cx: 5, cy: 5, r: 3 })
+  .styles({ "stroke": this.vector_color, "fill": this.vector_color });;
 
   this.parent.parent_svg.append("marker")
-    .attrs({ 
-      id: "arrow_component_"+this.vectorID,
-      viewBox: "0 0 10 10",
-      refX: 9.3,
-      refY: 5,
-      markerWidth: 3,
-      markerHeight: 3,
-      orient: "auto" 
-    })
-    .append("circle")
-    .attrs({ cx: 5, cy: 5, r: 2 })  
-    .styles({ "stroke": this.vector_color, "fill": this.vector_color });
+  .attrs({ 
+    id: "arrow_component_"+this.vectorID, 
+    viewBox: "0 0 10 10",
+    refX: 9,  // Adjusted for circle placement
+    refY: 5,
+    markerWidth: 6,
+    markerHeight: 6,
+    orient: "auto"
+  })
+  .append("circle")
+  .attrs({ cx: 5, cy: 5, r: 3 })
+  .styles({ "stroke": this.vector_color, "fill": this.vector_color });
 
   this.parent.parent_svg.append("marker")
-    .attrs({ 
-      id: "arrow_gray_"+this.vectorID,
-      viewBox: "0 0 10 10",
-      refX: 9.3,
-      refY: 5,
-      markerWidth: 4,
-      markerHeight: 4,
-      orient: "auto" 
-    })
-    .append("circle")
-    .attrs({ cx: 5, cy: 5, r: 3 })
-    .styles({ "stroke": this.gray_color, "fill": this.gray_color });
+  .attrs({ 
+    id: "arrow_grey_"+this.vectorID, 
+    viewBox: "0 0 10 10",
+    refX: 9,  // Adjusted for circle placement
+    refY: 5,
+    markerWidth: 6,
+    markerHeight: 6,
+    orient: "auto"
+  })
+  .append("circle")
+  .attrs({ cx: 5, cy: 5, r: 3 })
+  .styles({ "stroke": this.vector_color, "fill": this.vector_color });
 } else {
-  this.parent.canvas.append("marker")
-    .attrs({id: "arrow_"+this.vectorID, viewBox: "0 0 10 10", refX: 9.3, refY: 5, markerWidth: 4, markerHeight: 4, orient: "auto"})
-    .append("circle")
-    .attrs({ cx: 5, cy: 5, r: 3 })
-    .styles({ "stroke": this.gray_color, "fill": this.gray_color });
+  this.parent.parent_svg.append("marker")
+  .attrs({ 
+    id: "arrow_"+this.vectorID, 
+    viewBox: "0 0 10 10",
+    refX: 9,  // Adjusted for circle placement
+    refY: 5,
+    markerWidth: 6,
+    markerHeight: 6,
+    orient: "auto"
+  })
+  .append("circle")
+  .attrs({ cx: 5, cy: 5, r: 3 })
+  .styles({ "stroke": this.vector_color, "fill": this.vector_color });
 
-    this.parent.canvas.append("marker").attrs({ id: "arrow_component_"+this.vectorID, viewBox: "0 0 10 10", refX: 9.3, refY: 5, markerWidth: 3, markerHeight: 3, orient: "auto" })
-    .append("circle").attrs({cx: 5, cy: 5, r: 3 }).styles({ "stroke": this.vector_color, "fill": this.vector_color });
+  this.parent.parent_svg.append("marker")
+  .attrs({ 
+    id: "arrow_component_"+this.vectorID, 
+    viewBox: "0 0 10 10",
+    refX: 9,  // Adjusted for circle placement
+    refY: 5,
+    markerWidth: 6,
+    markerHeight: 6,
+    orient: "auto"
+  })
+  .append("circle")
+  .attrs({ cx: 5, cy: 5, r: 3 })
+  .styles({ "stroke": this.vector_color, "fill": this.vector_color });
 
-    this.parent.canvas.append("marker").attrs({ id: "arrow_gray_"+this.vectorID, viewBox: "0 0 10 10", refX: 9.3, refY: 5, markerWidth: 4, markerHeight: 4, orient: "auto" })
-    .append("circle").attrs({ cx: 5, cy: 5, r: 3 }).styles({ "stroke": this.gray_color, "fill": this.gray_color });
+  this.parent.parent_svg.append("marker")
+  .attrs({ 
+    id: "arrow_grey_"+this.vectorID, 
+    viewBox: "0 0 10 10",
+    refX: 9,  // Adjusted for circle placement
+    refY: 5,
+    markerWidth: 6,
+    markerHeight: 6,
+    orient: "auto"
+  })
+  .append("circle")
+  .attrs({ cx: 5, cy: 5, r: 3 })
+  .styles({ "stroke": this.vector_color, "fill": this.vector_color });
   }
 
   /*********************************************************************************Changes */

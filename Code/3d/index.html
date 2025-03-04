@@ -1,0 +1,127 @@
+<html lang="en">
+<head>
+<meta charset="utf-8">
+  <title>3D Complex Numbers</title>
+  <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0"/>
+</head>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://threejs.org/build/three.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+
+<style>
+  #complexEquation {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-size: 1.2em;
+    background: rgba(0,0,0,0.7);
+    padding: 10px;
+    border-radius: 5px;
+  }
+</style>
+
+<body>
+  <div id="complexEquation">z = 0.0 + i0.0</div>
+</body>
+
+<script>
+// Scene setup
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 1, 100);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// Camera positioning
+camera.position.set(15, 15, 15);
+camera.lookAt(0, 0, 0);
+
+// Controls
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+// Complex number components
+let zx = 5, zy = 5;
+
+// Create vector visualization
+const vectorGroup = new THREE.Group();
+const lineGeometry = new THREE.BufferGeometry();
+const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
+const line = new THREE.Line(lineGeometry, lineMaterial);
+
+const headGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+const headMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+const head = new THREE.Mesh(headGeometry, headMaterial);
+
+vectorGroup.add(line, head);
+scene.add(vectorGroup);
+
+// Controls UI
+const gui = d3.select("body").append("div")
+  .styles({ 
+    "position": "absolute", 
+    "top": "10%", 
+    "right": "5%",
+    "background": "rgba(0,0,0,0.7)",
+    "padding": "10px",
+    "color": "white"
+  });
+
+gui.append("div").html(`
+  <div style="margin-bottom: 15px;">
+    <input type="range" id="zx" min="-8" max="8" value="5" step="0.1">
+    <span id="zxVal" style="color: #FF4444">zₓ = 5.0</span>
+  </div>
+  <div>
+    <input type="range" id="zy" min="-8" max="8" value="5" step="0.1">
+    <span id="zyVal" style="color: #44FF44">zᵧ = 5.0</span>
+  </div>
+`);
+
+// Event handlers
+d3.select('#zx').on('input', function() {
+  zx = +this.value;
+  updateVector();
+});
+
+d3.select('#zy').on('input', function() {
+  zy = +this.value;
+  updateVector();
+});
+
+function updateVector() {
+  // Update geometry
+  const vertices = new Float32Array([
+    0, 0, 0,
+    zx, zy, 0
+  ]);
+  lineGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+  lineGeometry.attributes.position.needsUpdate = true;
+  
+  // Update head position
+  head.position.set(zx, zy, 0);
+  
+  // Update equation display
+  document.getElementById('complexEquation').innerHTML = 
+    `z = ${zx.toFixed(1)} + i${zy.toFixed(1)}`;
+  
+  // Update slider values
+  d3.select('#zxVal').text(`zₓ = ${zx.toFixed(1)}`);
+  d3.select('#zyVal').text(`zᵧ = ${zy.toFixed(1)}`);
+  
+  renderer.render(scene, camera);
+}
+
+// Initial render
+updateVector();
+
+// Animation loop
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
+animate();
+</script>
+</html>
