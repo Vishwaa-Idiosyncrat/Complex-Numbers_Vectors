@@ -1,13 +1,13 @@
-function createComplexCanvas(element) {
+function createCanvas(element) {
     var element_width = parseInt(element.style("width"));
     var element_height = parseInt(element.style("height"));
   
     var outer_div = element.append("div").styles({ "width": element_width, "height": element_height });
     screen_svg = {};
     screen_svg.canvas = outer_div.append("svg").styles({ "width": "100%", "height": "100%" });
-    screen_svg.complex_log = [];
-    screen_svg.complex_list = [];
-    screen_svg.complexID = -1;
+    screen_svg.vector_log = [];
+    screen_svg.vector_list = [];
+    screen_svg.vectorID = -1;
     screen_svg.settings = { show_decimals: false };
   
     screen_svg.canvas.on("touchstart", function () {
@@ -18,7 +18,7 @@ function createComplexCanvas(element) {
       d3.event.preventDefault();
     });
   
-    createComplexCanvasEvents();
+    createCanvasEvents();
   
     /*************************** Heading ***************************/
   
@@ -55,8 +55,8 @@ function createComplexCanvas(element) {
         confirmButtonText: 'Done',
       }).then((result) => {
         screen_svg.settings.show_decimals = document.getElementById('settings_show_decimals').checked;
-        screen_svg.complex_log.forEach(function (complex) {
-          if(complex) complex.update();
+        screen_svg.vector_log.forEach(function (vector) {
+          if(vector) vector.update();
         });
       });
     });
@@ -79,9 +79,9 @@ function createComplexCanvas(element) {
   
     refresh_icon_circle.on("click", function () {
       d3.selectAll(".vector_g").remove();
-      screen_svg.complex_list = [];
+      screen_svg.vector_list = [];
       screen_svg.addition_log = [];
-      screen_svg.complexID = -1;
+      screen_svg.vectorID = -1;
     })
   
     /*************************** Help Icon ***************************/
@@ -115,24 +115,24 @@ function createComplexCanvas(element) {
   
   /***********************************************************************************/
   
-  function createComplexCanvasEvents() {
+  function createCanvasEvents() {
     screen_svg.canvas.on("touchstart", function () {
       if (d3.event.touches.length == 2) {
         touch_1 = d3.event.touches[0];
         touch_2 = d3.event.touches[1];
         if (touch_1.target.nodeName == "svg" && touch_2.target.nodeName == "svg") {
   
-          screen_svg.complexID++;
-          var temp_complex = new createComplex({
+          screen_svg.vectorID++;
+          var temp_vector = new createVector({
             parent: screen_svg,
             real: (touch_1.pageX - element_width / 2) / 50,
             imag: -(touch_1.pageY - element_height / 2) / 50,
             movementAllowed: true,
-            complexID: screen_svg.complexID,
+            vectorID: screen_svg.vectorID,
             delete_allowed: true,
           });
   
-          screen_svg.complex_list.push(temp_complex);
+          screen_svg.vector_list.push(temp_vector);
         }
       }
     });

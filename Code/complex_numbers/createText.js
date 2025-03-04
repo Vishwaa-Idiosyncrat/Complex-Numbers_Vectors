@@ -11,12 +11,12 @@ createVector.prototype.create_text = function(){
     textBox: { "fill": this.vector_color, "fill-opacity": 0.1, width: 8*this.font_size_normal, height: 1.8*this.font_size_normal },
     tspans: [
       { index: 0, "value": this.symbol, "dominant-baseline": "middle", "font-size": this.font_size_normal, "fill": this.vector_color, "font-family": "sans-serif" },
-      { index: 1, "value": "_x", "dominant-baseline": "mathematical", "font-size": this.font_size_small, "fill": this.vector_color, "font-family": "sans-serif" },
+      { index: 1, "value": "ₓ", "dominant-baseline": "mathematical", "font-size": this.font_size_small, "fill": this.vector_color, "font-family": "sans-serif" },
       { index: 2, "value": " ", "dominant-baseline": "middle", "font-size": this.font_size_normal, "fill": "black", "font-family": "sans-serif" },
       { index: 3, "value": Math.round(radius_scale(this.r*Math.cos(this.angle_rad))*10)/10, "dominant-baseline": "middle", "font-size": this.font_size_normal, "fill": "black", "font-family": "sans-serif" },
       { index: 4, "value": " ", "dominant-baseline": "middle", "font-size": this.font_size_normal, "fill": "black", "font-family": "sans-serif" },
       { index: 5, "value": this.symbol, "dominant-baseline": "middle", "font-size": this.font_size_normal, "fill": this.vector_color, "font-family": "sans-serif" },
-      { index: 6, "value": "_y", "dominant-baseline": "mathematical", "font-size": this.font_size_small, "fill": this.vector_color, "font-family": "sans-serif" },
+      { index: 6, "value": "ᵧ", "dominant-baseline": "mathematical", "font-size": this.font_size_small, "fill": this.vector_color, "font-family": "sans-serif" },
       { index: 7, "value": " ", "dominant-baseline": "middle", "font-size": this.font_size_normal, "fill": "black", "font-family": "sans-serif" },
       { index: 8, "value": Math.round(radius_scale(this.r*Math.sin(this.angle_rad))*10)/10, "dominant-baseline": "middle", "font-size": this.font_size_normal, "fill": "black", "font-family": "sans-serif" },
     ]
