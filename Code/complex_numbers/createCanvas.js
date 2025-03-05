@@ -115,19 +115,33 @@ function createCanvas(element) {
   
   /***********************************************************************************/
   
-  screen_svg.canvas.on("touchstart", function () {
-    if (d3.event.touches.length == 2) {
-      const touch1 = d3.event.touches[0];
-      const touch2 = d3.event.touches[1];
-  
-      // Create a new complex number vector
-      const zx = (touch1.pageX + touch2.pageX) / 2;
-      const zy = (touch1.pageY + touch2.pageY) / 2;
-  
-      // Display the complex number
-      d3.select('#complexNumberDisplay')
-        .style('left', `${zx}px`)
-        .style('top', `${zy}px`)
-        .text(`z = ${zx.toFixed(1)} + i${zy.toFixed(1)}`);
-    }
-  });
+  function createCanvasEvents() {
+    screen_svg.canvas.on("touchstart", function () {
+      if (d3.event.touches.length == 2) {
+        const touch1 = d3.event.touches[0];
+        const touch2 = d3.event.touches[1];
+    
+        const zx = ((touch1.pageX + touch2.pageX) / 2 - screen_svg.canvas.node().getBoundingClientRect().left) / screen_dpi;
+        const zy = ((touch1.pageY + touch2.pageY) / 2 - screen_svg.canvas.node().getBoundingClientRect().top) / screen_dpi;
+    
+        d3.select('#complexNumberDisplay')
+          .style('left', `${(touch1.pageX + touch2.pageX) / 2}px`)
+          .style('top', `${(touch1.pageY + touch2.pageY) / 2}px`)
+          .text(`z = ${zx.toFixed(1)} + i${zy.toFixed(1)}`);
+    
+        // Create the vector
+        screen_svg.vectorID++;
+        const temp_vector = new createVector({
+          parent: screen_svg,
+          cx: (touch1.pageX + touch2.pageX) / 2,
+          cy: (touch1.pageY + touch2.pageY) / 2,
+          r: distpoints(touch1.pageX, touch1.pageY, touch2.pageX, touch2.pageY),
+          angle_rad: Math.atan2(-(touch2.pageY - touch1.pageY), (touch2.pageX - touch1.pageX)),
+          vectorID: screen_svg.vectorID,
+          symbol: ['z', 'w', 'u', 'v'][screen_svg.vectorID % 4] // Use complex symbols
+        });
+        screen_svg.vector_list.push(temp_vector);
+      }
+    });
+  }
+

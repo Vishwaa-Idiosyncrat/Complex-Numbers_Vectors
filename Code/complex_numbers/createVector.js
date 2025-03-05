@@ -187,9 +187,17 @@ createVector.prototype.create = function(){
   this.delete_button.shown = false;
   this.delete_button.active = false;
   this.delete_button.image = this.container.append("image").attrs({ "xlink:href": "../../Images/delete.png", width: 0, height: 0 }).data([this]);
+  
+  this.complexDisplay = this.container.append("text")
+    .attr("class", "complex-number")
+    .style("font-size", "1.2em")
+    .style("fill", this.vector_color)
+    .text(`z = ${this.symbol}`);
 
   this.create_text();
   this.create_equation();
+
+  
 }
 
 /***********************************************************************************/
@@ -414,5 +422,14 @@ createVector.prototype.setup_view = function(){
   this.setup_view_equation();
 
 }
+
+createVector.prototype.create = function() {
+  // Original vector creation logic
+  this.complexDisplay = this.container.append("text")
+    .attr("class", "complex-number")
+    .style("font-size", "1.2em")
+    .style("fill", this.vector_color)
+    .text(`z = ${this.symbol}`);
+};
 
 /***********************************************************************************/

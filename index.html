@@ -44,6 +44,7 @@
   <!-- Thumbnail -->
   <div style="height: 10%;"></div>
   <div class="container-fluid">
+    <div id="complexNumberDisplay" style="position: absolute; color: white; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 3px; pointer-events: none;"></div>
     <div class="col-xs-10 col-sm-8 col-md-6 col-lg-6 mx-auto">
       <img src="Images/thumbnail.png" style="max-width: 100%;" class="mx-auto"></img>
     </div>
@@ -72,11 +73,11 @@
 </body>
 
 <script>
-d3.select(window).on("resize", function(){ footer_pos(); })
-function footer_pos(){
-  var temp_pos = d3.select("#enter_div")._groups[0][0].offsetTop + d3.select("#enter_div")._groups[0][0].scrollHeight;
-  var temp_height = d3.select("#footer")._groups[0][0].scrollHeight;
-  if(temp_height+temp_pos < innerHeight){ d3.select("#footer").styles({ position: 'fixed', bottom: 0 }) }
-  else { d3.select("#footer").styles({ position: 'relative' }) }
-}; footer_pos();
-</script>
+  d3.select(window).on("resize", function(){ footer_pos(); })
+  function footer_pos(){
+    var temp_pos = d3.select("#enter_div")._groups[0][0].offsetTop + d3.select("#enter_div")._groups[0][0].scrollHeight;
+    var temp_height = d3.select("#footer")._groups[0][0].scrollHeight;
+    if(temp_height+temp_pos < innerHeight){ d3.select("#footer").styles({ position: 'fixed', bottom: 0 }) }
+    else { d3.select("#footer").styles({ position: 'relative' }) }
+  }; footer_pos();
+  </script>
