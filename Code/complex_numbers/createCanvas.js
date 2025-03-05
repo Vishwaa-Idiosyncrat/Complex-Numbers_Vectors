@@ -115,25 +115,19 @@ function createCanvas(element) {
   
   /***********************************************************************************/
   
-  function createCanvasEvents() {
-    screen_svg.canvas.on("touchstart", function () {
-      if (d3.event.touches.length == 2) {
-        touch_1 = d3.event.touches[0];
-        touch_2 = d3.event.touches[1];
-        if (touch_1.target.nodeName == "svg" && touch_2.target.nodeName == "svg") {
+  screen_svg.canvas.on("touchstart", function () {
+    if (d3.event.touches.length == 2) {
+      const touch1 = d3.event.touches[0];
+      const touch2 = d3.event.touches[1];
   
-          screen_svg.vectorID++;
-          var temp_vector = new createVector({
-            parent: screen_svg,
-            real: (touch_1.pageX - element_width / 2) / 50,
-            imag: -(touch_1.pageY - element_height / 2) / 50,
-            movementAllowed: true,
-            vectorID: screen_svg.vectorID,
-            delete_allowed: true,
-          });
+      // Create a new complex number vector
+      const zx = (touch1.pageX + touch2.pageX) / 2;
+      const zy = (touch1.pageY + touch2.pageY) / 2;
   
-          screen_svg.vector_list.push(temp_vector);
-        }
-      }
-    });
-  }
+      // Display the complex number
+      d3.select('#complexNumberDisplay')
+        .style('left', `${zx}px`)
+        .style('top', `${zy}px`)
+        .text(`z = ${zx.toFixed(1)} + i${zy.toFixed(1)}`);
+    }
+  });
