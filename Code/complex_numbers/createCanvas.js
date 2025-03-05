@@ -121,25 +121,34 @@ function createCanvas(element) {
         const touch1 = d3.event.touches[0];
         const touch2 = d3.event.touches[1];
     
+        // Calculate midpoint for complex number display
         const zx = ((touch1.pageX + touch2.pageX) / 2 - screen_svg.canvas.node().getBoundingClientRect().left) / screen_dpi;
         const zy = ((touch1.pageY + touch2.pageY) / 2 - screen_svg.canvas.node().getBoundingClientRect().top) / screen_dpi;
     
+        // Display the complex number
         d3.select('#complexNumberDisplay')
           .style('left', `${(touch1.pageX + touch2.pageX) / 2}px`)
           .style('top', `${(touch1.pageY + touch2.pageY) / 2}px`)
           .text(`z = ${zx.toFixed(1)} + i${zy.toFixed(1)}`);
     
-        // Create the vector
+        // Create the visual vector
         screen_svg.vectorID++;
         const temp_vector = new createVector({
           parent: screen_svg,
-          cx: (touch1.pageX + touch2.pageX) / 2,
-          cy: (touch1.pageY + touch2.pageY) / 2,
-          r: distpoints(touch1.pageX, touch1.pageY, touch2.pageX, touch2.pageY),
-          angle_rad: Math.atan2(-(touch2.pageY - touch1.pageY), (touch2.pageX - touch1.pageX)),
+          cx: touch1.pageX, // First finger position (center)
+          cy: touch1.pageY,
+          r: distpoints(touch1.pageX, touch1.pageY, touch2.pageX, touch2.pageY), // Distance between fingers
+          angle_rad: Math.atan2(-(touch2.pageY - touch1.pageY), (touch2.pageX - touch1.pageX)), // Angle
           vectorID: screen_svg.vectorID,
-          symbol: ['z', 'w', 'u', 'v'][screen_svg.vectorID % 4] // Use complex symbols
+          symbol: ['z', 'w', 'u', 'v'][screen_svg.vectorID % 4], // Use complex symbols
+          manipulationPossible: true,
+          manipulables: { r: true, angle: true, xComponent: true, yComponent: true },
+          resolution_allowed: true,
+          movementAllowed: true,
+          vector_mode: "polar"
         });
+    
+        // Add the vector to the list
         screen_svg.vector_list.push(temp_vector);
       }
     });
