@@ -40,3 +40,10 @@ text{
 	color: gray;
 	text-align: left;
 }
+
+.component-display {
+  dominant-baseline: middle;
+  text-anchor: start;
+  pointer-events: none;
+  font-family: sans-serif;
+}
