@@ -2,8 +2,10 @@
 function createVector(data) {
   if (navigator.vibrate) navigator.vibrate([50]);
 
-  // Initialize core properties
+  // Initialize properties from data
   for (let key in data) this[key] = data[key];
+  
+  // Visual styling
   this.vector_color = color(data.vectorID);
   this.gray_color = "#666";
   this.manipulationMode = false;
@@ -12,18 +14,18 @@ function createVector(data) {
   // Complex number configuration
   this.complexSymbols = ['z', 'w', 'u', 'v'];
   this.symbol = this.complexSymbols[data.vectorID % 4];
-  screen_svg.vector_log[data.vectorID] = this;
-
-  // Visual parameters
+  
+  // Size calculations
   this.control_circle_radius = 3 * screen_dpi;
   this.control_line_size = 4 * screen_dpi;
   this.addition_circle_radius = 2 * screen_size;
 
-  // Create vector elements
+  // Create visual elements
   this.create();
   this.setup();
   this.update();
   this.setup_view();
+  
   if (!this.addedVectors) this.createEvents();
 }
 
@@ -34,36 +36,34 @@ createVector.prototype.create = function() {
     .classed("vector_g", true)
     .attr("transform", `translate(${this.cx},${this.cy})`);
 
-  // Core vector elements
+  // 1. Base Circle
   this.circle = this.container.append("circle")
     .attr("r", this.r)
     .style("stroke", this.gray_color)
+    .style("stroke-opacity", 0.5)
     .style("fill", "none");
 
+  // 2. Vector Line with Round Head
   this.vector_line = this.container.append("line")
     .style("stroke", this.vector_color)
     .style("stroke-width", 0.4 * screen_size)
     .attr("marker-end", `url(#arrow_${this.vectorID})`);
 
-  // Vector head
+  // 3. Vector Head Circle
   this.vector_head = this.container.append("circle")
-    .attr("r", 0.4 * screen_size)
+    .attr("r", 0.8 * screen_size)
     .style("fill", this.vector_color);
 
-  // Component displays
-  this.realDisplay = this.container.append("text")
-    .classed("component-display", true)
-    .style("font-size", "1.2em")
-    .style("fill", this.vector_color)
-    .style("display", "none");
+  // 4. Axis Lines
+  this.xAxis = this.container.append("line")
+    .style("stroke", this.gray_color)
+    .style("stroke-dasharray", "3,3");
 
-  this.imagDisplay = this.container.append("text")
-    .classed("component-display", true)
-    .style("font-size", "1.2em")
-    .style("fill", this.vector_color)
-    .style("display", "none");
+  this.yAxis = this.container.append("line")
+    .style("stroke", this.gray_color)
+    .style("stroke-dasharray", "3,3");
 
-  // Projection elements
+  // 5. Component Projections
   this.xComponent_line = this.container.append("line")
     .style("stroke", this.vector_color)
     .style("stroke-dasharray", "3,3");
@@ -72,9 +72,15 @@ createVector.prototype.create = function() {
     .style("stroke", this.vector_color)
     .style("stroke-dasharray", "3,3");
 
-  // Control elements
+  // 6. Control Elements
   this.centre_circle = this.container.append("circle")
     .attr("r", 0.8 * screen_size)
+    .style("fill", this.vector_color);
+
+  // 7. Complex Number Display
+  this.complexDisplay = this.container.append("text")
+    .classed("complex-number", true)
+    .style("font-size", "1.2em")
     .style("fill", this.vector_color);
 };
 
@@ -89,6 +95,7 @@ createVector.prototype.update = function() {
 
   // Update visual elements
   this.circle.attr("r", this.r);
+  
   this.vector_line
     .attr("x2", this.xComponent_length)
     .attr("y2", -this.yComponent_length);
@@ -97,40 +104,27 @@ createVector.prototype.update = function() {
     .attr("cx", this.xComponent_length)
     .attr("cy", -this.yComponent_length);
 
-  // Update component displays
-  if (this.componentized) {
-    const real = (this.xComponent_length / screen_dpi).toFixed(1);
-    const imag = (Math.abs(this.yComponent_length) / screen_dpi).toFixed(1);
-    
-    this.realDisplay
-      .attr("x", this.xComponent_length + 10)
-      .attr("y", -this.yComponent_length - 15)
-      .text(`${real}`)
-      .style("display", null);
+  this.xAxis
+    .attr("x1", -this.r)
+    .attr("x2", this.r);
 
-    this.imagDisplay
-      .attr("x", this.xComponent_length + 10)
-      .attr("y", -this.yComponent_length + 15)
-      .text(`i${imag}`)
-      .style("display", null);
+  this.yAxis
+    .attr("y1", -this.r)
+    .attr("y2", this.r);
 
-    this.xComponent_line
-      .attr("x1", 0)
-      .attr("y1", 0)
-      .attr("x2", this.xComponent_length)
-      .attr("y2", 0);
-
-    this.yComponent_line
-      .attr("x1", 0)
-      .attr("y1", 0)
-      .attr("x2", 0)
-      .attr("y2", -this.yComponent_length);
-  }
+  // Update complex number display
+  const real = (this.xComponent_length / screen_dpi).toFixed(1);
+  const imag = (Math.abs(this.yComponent_length) / screen_dpi).toFixed(1);
+  
+  this.complexDisplay
+    .attr("x", this.xComponent_length + 10)
+    .attr("y", -this.yComponent_length + 5)
+    .text(`${real} ${this.yComponent_length >= 0 ? '+' : '-'} i${imag}`);
 };
 
 /***********************************************************************************/
 createVector.prototype.setup = function() {
-  // Initialize marker definitions
+  // Create vector markers
   const createMarker = (id, color) => {
     return this.parent.canvas.append("marker")
       .attr("id", id)
@@ -148,27 +142,7 @@ createVector.prototype.setup = function() {
   };
 
   createMarker(`arrow_${this.vectorID}`, this.vector_color);
-  createMarker(`arrow_component_${this.vectorID}`, this.vector_color);
   createMarker(`arrow_gray_${this.vectorID}`, this.gray_color);
-};
-
-/***********************************************************************************/
-createVector.prototype.resolveComponents = function() {
-  this.componentized = true;
-  this.vector_line.style("stroke-dasharray", "5,5");
-  this.xComponent_line.style("display", null);
-  this.yComponent_line.style("display", null);
-  this.update();
-};
-
-createVector.prototype.recombineComponents = function() {
-  this.componentized = false;
-  this.vector_line.style("stroke-dasharray", "none");
-  this.xComponent_line.style("display", "none");
-  this.yComponent_line.style("display", "none");
-  this.realDisplay.style("display", "none");
-  this.imagDisplay.style("display", "none");
-  this.update();
 };
 
 /***********************************************************************************/
@@ -177,6 +151,16 @@ createVector.prototype.setup_view = function() {
   this.xComponent_line.style("display", "none");
   this.yComponent_line.style("display", "none");
   this.centre_circle.style("display", this.manipulationMode ? null : "none");
+  
+  if (this.vector_mode === "polar") {
+    this.vector_line.style("display", null);
+    this.xComponent_line.style("display", "none");
+    this.yComponent_line.style("display", "none");
+  } else {
+    this.vector_line.style("display", "none");
+    this.xComponent_line.style("display", null);
+    this.yComponent_line.style("display", null);
+  }
 };
 
 /***********************************************************************************/
@@ -200,4 +184,5 @@ createVector.prototype.createEvents = function() {
     });
 
   this.vector_line.call(dragHandler);
+  this.centre_circle.call(dragHandler);
 };
