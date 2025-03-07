@@ -274,8 +274,8 @@ createVector.prototype.update = function () {
     this.xComponent_length = this.r * Math.cos(this.angle_rad);
     this.yComponent_length = this.r * Math.sin(this.angle_rad);
   
-    // this.xComponent_coordinate = this.cx + this.r*Math.cos(this.angle_rad);
-    // this.yComponent_coordinate = this.cy - this.r*Math.sin(this.angle_rad);
+    this.xComponent_coordinate = this.cx + this.r*Math.cos(this.angle_rad);
+    this.yComponent_coordinate = this.cy - this.r*Math.sin(this.angle_rad);
   
     /*************************** Container ***************************/
   
