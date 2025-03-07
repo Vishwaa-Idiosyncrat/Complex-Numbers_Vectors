@@ -180,7 +180,7 @@ createVector.prototype.create = function () {
     .attr("class", "complex-number")
     .style("font-size", "1.2em")
     .style("fill", this.vector_color)
-    .text(`z = ${this.symbol}`);
+    .text();
 
   this.create_text();
   this.create_equation();
