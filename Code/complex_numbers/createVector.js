@@ -250,10 +250,10 @@ createVector.prototype.setup = function () {
 createVector.prototype.update = function () {
   // Original update logic remains unchanged
   // Ensure the complex number display updates correctly
-  this.complexDisplay
-    .attr("x", this.cx + 10)
-    .attr("y", this.cy + 10)
-    .text(`z = ${this.symbol}_r = ${this.r.toFixed(1)}, ${this.symbol}_θ = ${this.angle_deg.toFixed(1)}°`);
+  // this.complexDisplay
+    // .attr("x", this.cx + 10)
+    // .attr("y", this.cy + 10)
+    // .text(`z = ${this.symbol}_r = ${this.r.toFixed(1)}, ${this.symbol}_θ = ${this.angle_deg.toFixed(1)}°`);
 
 
     if( isNaN(this.r) || isNaN(this.angle_rad) || isNaN(this.cx) || isNaN(this.cy)){ return }
