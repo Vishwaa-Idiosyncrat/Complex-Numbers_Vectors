@@ -131,18 +131,6 @@ createVector.prototype.create = function () {
   this.xAxis = this.container.append("line");
   this.yAxis = this.container.append("line");
 
-  this.realPartDisplay = this.container.append("text")
-    .attr("class", "component-display")
-    .style("font-size", "1.2em")
-    .style("fill", this.vector_color)
-    .style("display", "none");
-
-  this.imagPartDisplay = this.container.append("text")
-    .attr("class", "component-display")
-    .style("font-size", "1.2em")
-    .style("fill", this.vector_color)
-    .style("display", "none");
-
   /*************************** Projection lines and paths ***************************/
   this.xComponent_triangle = this.container.append("path").attr("class", "projection_" + this.vectorID);
   this.yComponent_triangle = this.container.append("path").attr("class", "projection_" + this.vectorID);
@@ -192,7 +180,7 @@ createVector.prototype.create = function () {
     .attr("class", "complex-number")
     .style("font-size", "1.2em")
     .style("fill", this.vector_color)
-    .text();
+    .text(`z = ${this.symbol}`);
 
   this.create_text();
   this.create_equation();
@@ -261,45 +249,22 @@ createVector.prototype.setup = function () {
 
 createVector.prototype.update = function () {
   // Original update logic remains unchanged
-
-
-  if (isNaN(this.r) || isNaN(this.angle_rad) || isNaN(this.cx) || isNaN(this.cy)) return;
-  if (isNaN(this.r) || isNaN(this.angle_rad)) return;
-
-  const x = this.xComponent_coordinate - this.cx; // x-component of the vector
-  const y = -(this.yComponent_coordinate - this.cy); // y-component of the vector
-
-  const real = (this.r * Math.cos(this.angle_rad)).toFixed(1);
-  const imag = (this.r * Math.sin(this.angle_rad)).toFixed(1);
-
-  this.realPartDisplay
-  .attr("x", this.cx + 10)
-  .attr("y", this.cy - 15)
-  .text(`${real}`);
-
-this.imagPartDisplay
-  .attr("x", this.cx + 10)
-  .attr("y", this.cy + 15)
-  .text(`i${imag}`);
-
-
-
-  const screen_x = x.toFixed(1);
-  const screen_y = y.toFixed(1);
-
+  // Ensure the complex number display updates correctly
   this.complexDisplay
-    .attr("x", this.xComponent_coordinate + 5) // Position near vector head
-    .attr("y", this.yComponent_coordinate - 5)
-    .text(`z = ${screen_x} + i${screen_y}`);
+    .attr("x", this.cx + 10)
+    .attr("y", this.cy + 10)
+    .text(`z = ${this.symbol}_r = ${this.r.toFixed(1)}, ${this.symbol}_θ = ${this.angle_deg.toFixed(1)}°`);
+
+
+    if( isNaN(this.r) || isNaN(this.angle_rad) || isNaN(this.cx) || isNaN(this.cy)){ return }
 
     /*************************** Component dimensions ***************************/
   
-
-    this.angle_deg = this.angle_rad * 180 / Math.PI;
-    if (this.angle_deg < 0) this.angle_deg += 360;
+    this.angle_deg = this.angle_rad*180/Math.PI;
+    if(this.angle_deg < 0){ this.angle_deg += 360; }
   
-    this.xComponent_length = this.r * Math.cos(this.angle_rad);
-    this.yComponent_length = this.r * Math.sin(this.angle_rad);
+    this.xComponent_length = this.r*Math.cos(this.angle_rad);
+    this.yComponent_length = this.r*Math.sin(this.angle_rad);
   
     this.xComponent_coordinate = this.cx + this.r*Math.cos(this.angle_rad);
     this.yComponent_coordinate = this.cy - this.r*Math.sin(this.angle_rad);
@@ -436,15 +401,3 @@ createVector.prototype.setup_view = function () {
 }
 
 /***********************************************************************************/
-
-createVector.prototype.resolveComponents = function() {
-  this.realPartDisplay.style("display", null);
-  this.imagPartDisplay.style("display", null);
-  this.vector_line.styles({"stroke-dasharray": "5,5"});  // Make vector line dashed
-};
-
-createVector.prototype.recombine = function() {
-  this.realPartDisplay.style("display", "none");
-  this.imagPartDisplay.style("display", "none");
-  this.vector_line.styles({"stroke-dasharray": "none"});
-};
