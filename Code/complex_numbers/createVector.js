@@ -251,31 +251,18 @@ createVector.prototype.update = function () {
   // Original update logic remains unchanged
 
 
-  if (isNaN(this.r) || isNaN(this.angle_rad) || isNaN(this.cx) || isNaN(this.cy)) return;
-
-  const x = this.xComponent_coordinate - this.cx; // x-component of the vector
-  const y = -(this.yComponent_coordinate - this.cy); // y-component of the vector
-
-
-  const screen_x = x.toFixed(1);
-  const screen_y = y.toFixed(1);
-
-  this.complexDisplay
-    .attr("x", this.xComponent_coordinate + 5) // Position near vector head
-    .attr("y", this.yComponent_coordinate - 5)
-    .text(`z = ${screen_x} + i${screen_y}`);
+    if( isNaN(this.r) || isNaN(this.angle_rad) || isNaN(this.cx) || isNaN(this.cy)){ return }
 
     /*************************** Component dimensions ***************************/
   
-
-    this.angle_deg = this.angle_rad * 180 / Math.PI;
-    if (this.angle_deg < 0) this.angle_deg += 360;
+    this.angle_deg = this.angle_rad*180/Math.PI;
+    if(this.angle_deg < 0){ this.angle_deg += 360; }
   
-    this.xComponent_length = this.r * Math.cos(this.angle_rad);
-    this.yComponent_length = this.r * Math.sin(this.angle_rad);
+    this.xComponent_length = this.r*Math.cos(this.angle_rad);
+    this.yComponent_length = this.r*Math.sin(this.angle_rad);
   
-    // this.xComponent_coordinate = this.cx + this.r*Math.cos(this.angle_rad);
-    // this.yComponent_coordinate = this.cy - this.r*Math.sin(this.angle_rad);
+    this.xComponent_coordinate = this.cx + this.r*Math.cos(this.angle_rad);
+    this.yComponent_coordinate = this.cy - this.r*Math.sin(this.angle_rad);
   
     /*************************** Container ***************************/
   

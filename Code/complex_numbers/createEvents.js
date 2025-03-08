@@ -2,39 +2,6 @@
 
 createVector.prototype.createEvents = function(){
 
-  var tempPinchStartDistance = 0;
-
-resultant.vector_resolve_rect.on("touchstart", function(d) {
-  if(d3.event.touches.length === 2) {
-    tempPinchStartDistance = distpoints(
-      d3.event.touches[0].pageX, 
-      d3.event.touches[0].pageY,
-      d3.event.touches[1].pageX,
-      d3.event.touches[1].pageY
-    );
-  }
-});
-
-resultant.vector_resolve_rect.on("touchmove", function(d) {
-  if(d3.event.touches.length === 2) {
-    const currentDistance = distpoints(
-      d3.event.touches[0].pageX,
-      d3.event.touches[0].pageY,
-      d3.event.touches[1].pageX,
-      d3.event.touches[1].pageY
-    );
-
-    // Resolve at 25% pinch-in
-    if(currentDistance < tempPinchStartDistance * 0.75) {
-      d.resolveComponents();
-    }
-    // Recombine at 25% pinch-out 
-    else if(currentDistance > tempPinchStartDistance * 1.25) {
-      d.recombine();
-    }
-  }
-});
-
   this.temp_pos = {};
 
   /*************************** Circle Events ***************************/
