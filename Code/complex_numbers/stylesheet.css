@@ -42,8 +42,8 @@ text{
 }
 
 .component-display {
-  dominant-baseline: middle;
-  text-anchor: start;
-  pointer-events: none;
-  font-family: sans-serif;
-}
+	dominant-baseline: middle;
+	text-anchor: start;
+	pointer-events: none;
+	font-family: sans-serif;
+  }
