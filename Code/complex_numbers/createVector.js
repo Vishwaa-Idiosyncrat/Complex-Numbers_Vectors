@@ -396,3 +396,13 @@ createVector.prototype.setup_view = function () {
 }
 
 /***********************************************************************************/
+
+
+createVector.prototype.computeAdditiveInverse = function () {
+  // Flip the vector 180° (reverse direction)
+  this.angle_rad += Math.PI; // Rotate by 180°
+  if (this.angle_rad > 2 * Math.PI) {
+    this.angle_rad -= 2 * Math.PI; // Normalize angle
+  }
+  this.update(); // Update the vector's position and components
+};
