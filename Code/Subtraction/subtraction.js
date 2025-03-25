@@ -4,12 +4,16 @@ createVector.prototype.subtractVectors = function(){
 
   object.resultant = this.create_Resultant();
   object.vector_2 = this.create_Vector_2(object.resultant);
+
+  console.log("Flip button clickeddddd!");
     // Flip the second vector's angle to represent subtraction (i.e. -w)
   d3.select("#flipVectorButton").on("click", function() {
-    object.vector_2.angle_rad += Math.PI;
-    object.vector_2.angle_deg = object.vector_2.angle_rad * 180 / Math.PI;
-    object.vector_2.update();
-      });
+    object.resultant.angle_rad += Math.PI;
+    object.resultant.angle_deg = object.vector_2.angle_rad * 180 / Math.PI;
+    object.resultant.update();
+    // object.update_Added_vectors();
+    // object.resultant.update();
+  });
   
   object.vector_1 = this.create_Vector_1(object.resultant, object.vector_2);
 
@@ -255,3 +259,12 @@ createVector.prototype.create_Vector_1 = function(resultant, vector_2){
   temp_vector.vector_line.attrs({ "marker-end": "url(#arrow_component_" +temp_vector.vectorID+ ")" });
   return(temp_vector);
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+  console.log("DOM fully loaded, attaching event listener.");
+  d3.select("#flipVectorButton").on("click", function() {
+    console.log("Flip button clicked!");
+  });
+});
+
+
