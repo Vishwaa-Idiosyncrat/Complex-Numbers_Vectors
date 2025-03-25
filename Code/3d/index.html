@@ -1,127 +1,111 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-  <title>3D Complex Numbers</title>
+  <title>3D Touchy feely Vectors</title>
   <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0"/>
 </head>
 
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src = "../../Libraries/d3.v4.min.js"></script>
+<script src = "../../Libraries/d3-selection-multi.v1.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+<script src = "../../Libraries/math.min.js"></script>
+<script src = "../../Libraries/sweetalert2.all.js"></script>
+
 <script src="https://threejs.org/build/three.js"></script>
 <script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
-
-<style>
-  #complexEquation {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    color: white;
-    font-size: 1.2em;
-    background: rgba(0,0,0,0.7);
-    padding: 10px;
-    border-radius: 5px;
-  }
-</style>
-
-<body>
-  <div id="complexNumberDisplay" style="position: absolute; color: white; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 3px; pointer-events: none;"></div>
-</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
 
 <script>
-// Scene setup
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 1, 100);
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-104287448-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+<link rel="stylesheet" type="text/css" href="../Vector/stylesheet.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<body></body>
+
+<script>
+
+scene=new THREE.Scene();
+
+camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,1,100);
+camera.position.set(20, 20, 20);
+camera.lookAt(new THREE.Vector3(0,0,0));
+
+renderer=new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth,window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Camera positioning
-camera.position.set(15, 15, 15);
-camera.lookAt(0, 0, 0);
+scene.add( new THREE.AxesHelper(10) );
 
-// Controls
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
+/******************************************************************************/
 
-// Complex number components
-let zx = 5, zy = 5;
+controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.addEventListener('change',function(){
+    renderer.render(scene,camera);
+},false);
 
-// Create vector visualization
-const vectorGroup = new THREE.Group();
-const lineGeometry = new THREE.BufferGeometry();
-const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffff00 });
-const line = new THREE.Line(lineGeometry, lineMaterial);
+var x = 5, y = 5, z = 5;
+controls = d3.select("body").append("div").styles({ "position": "absolute", "top": "10%", "right": "5%" });
 
-const headGeometry = new THREE.SphereGeometry(0.3, 16, 16);
-const headMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-const head = new THREE.Mesh(headGeometry, headMaterial);
+x_control = controls.append('div').styles({ 'padding-bottom': '5%' });
+x_control.append('input').attrs({ id: 'x_slider', type: "range", min: -8, max: 8, value: x, step: 1});
+x_control.append('span').attrs({ id: 'x_text' }).styles({ 'color': 'red', 'vertical-align': 'super' });
+d3.select('#x_slider').on('change', function(){
+  x = this.value; $('body').trigger('change');
+})
 
-vectorGroup.add(line, head);
-scene.add(vectorGroup);
+y_control = controls.append('div').styles({ 'padding-bottom': '5%' });
+y_control.append('input').attrs({ id: 'y_slider', type: "range", min: -8, max: 8, value: y, step: 1});
+y_control.append('span').attrs({ id: 'y_text' }).styles({ 'color': 'lightgreen', 'vertical-align': 'super' });
+d3.select('#y_slider').on('change', function(){
+  y = this.value; $('body').trigger('change');
+})
 
-// Controls UI
-const gui = d3.select("body").append("div")
-  .styles({ 
-    "position": "absolute", 
-    "top": "10%", 
-    "right": "5%",
-    "background": "rgba(0,0,0,0.7)",
-    "padding": "10px",
-    "color": "white"
-  });
+z_control = controls.append('div').styles({ 'padding-bottom': '5%' });
+z_control.append('input').attrs({ id: 'z_slider', type: "range", min: -8, max: 8, value: z, step: 1});
+z_control.append('span').attrs({ id: 'z_text' }).styles({ 'color': 'cadetblue', 'vertical-align': 'super' });
+d3.select('#z_slider').on('change', function(){
+  z = this.value; $('body').trigger('change');
+})
 
-gui.append("div").html(`
-  <div style="margin-bottom: 15px;">
-    <input type="range" id="zx" min="-8" max="8" value="5" step="0.1">
-    <span id="zxVal" style="color: #FF4444">zₓ = 5.0</span>
-  </div>
-  <div>
-    <input type="range" id="zy" min="-8" max="8" value="5" step="0.1">
-    <span id="zyVal" style="color: #44FF44">zᵧ = 5.0</span>
-  </div>
-`);
+/******************************************************************************/
 
-// Event handlers
-d3.select('#zx').on('input', function() {
-  zx = +this.value;
-  updateVector();
-});
 
-d3.select('#zy').on('input', function() {
-  zy = +this.value;
-  updateVector();
-});
 
-function updateVector() {
-  // Update geometry
-  const vertices = new Float32Array([
-    0, 0, 0,
-    zx, zy, 0
-  ]);
-  lineGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-  lineGeometry.attributes.position.needsUpdate = true;
-  
-  // Update head position
-  head.position.set(zx, zy, 0);
-  
-  // Update equation display
-  document.getElementById('complexEquation').innerHTML = 
-    `z = ${zx.toFixed(1)} + i${zy.toFixed(1)}`;
-  
-  // Update slider values
-  d3.select('#zxVal').text(`zₓ = ${zx.toFixed(1)}`);
-  d3.select('#zyVal').text(`zᵧ = ${zy.toFixed(1)}`);
-  
+/******************************************************************************/
+
+$('body').on('change', function(){
+  var length = Math.sqrt(x*x + y*y + z*z);
+  var dir = new THREE.Vector3( x, y, z );
+  dir.normalize();
+
+  var origin = new THREE.Vector3( 0, 0, 0 );
+  var hex = 0xffff00;
+  var arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+  if(scene.children.length > 1){ scene.children.pop(); }
+  scene.add( arrowHelper );
+
   renderer.render(scene, camera);
-}
 
-// Initial render
-updateVector();
+  d3.select('#x_text').text(' X = ' + x);
+  d3.select('#y_text').text(' Y = ' + y);
+  d3.select('#z_text').text(' Z = ' + z);
+})
 
-// Animation loop
-function animate() {
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
-}
-animate();
+$('body').trigger('change');
+
+swal({
+  title: 'Welcome',
+  text: 'This version is still under development!',
+  confirmButtonText: 'Cool'
+})
+
 </script>
-</html>

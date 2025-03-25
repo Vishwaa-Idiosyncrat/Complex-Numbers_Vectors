@@ -1,0 +1,44 @@
+html{
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	-khtml-user-select: none; /* Konqueror HTML */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+body{
+	margin: 0px;
+}
+
+@font-face {
+	font-family: roboto;
+	src: url(../../Fonts/Roboto-Regular.ttf);
+}
+
+@font-face {
+	font-family: code2000;
+	src: url(../../Fonts/Code2000.ttf);
+}
+
+text{
+	dominant-baseline: middle;
+	text-anchor: middle;
+	font-family: sans-serif code2000, serif;
+}
+
+.invisible{
+	opacity: 0;
+}
+
+.visible{
+	opacity: 0.2;
+}
+
+.help_heading{}
+
+.help_body{
+	font-family: initial;
+	color: gray;
+	text-align: left;
+}

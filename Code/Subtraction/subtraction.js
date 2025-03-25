@@ -1,9 +1,16 @@
-createVector.prototype.addVectors = function(){
+createVector.prototype.subtractVectors = function(){
   var object = new Object();
   if(navigator.vibrate){ navigator.vibrate([50]); }
 
   object.resultant = this.create_Resultant();
   object.vector_2 = this.create_Vector_2(object.resultant);
+    // Flip the second vector's angle to represent subtraction (i.e. -w)
+  d3.select("#flipVectorButton").on("click", function() {
+    object.vector_2.angle_rad += Math.PI;
+    object.vector_2.angle_deg = object.vector_2.angle_rad * 180 / Math.PI;
+    object.vector_2.update();
+      });
+  
   object.vector_1 = this.create_Vector_1(object.resultant, object.vector_2);
 
   // if(object.vector_1.taskScreen == true){
@@ -66,8 +73,8 @@ createVector.prototype.addVectors = function(){
 
   var symbol_1 = object.vector_1.symbol, symbol_2 = object.vector_2.symbol, symbol_r = object.resultant.symbol;
   object.div = d3.select('body').append('div').styles({ 'font-size': object.font_size_normal, 'position': 'absolute' });
-  object.div.append('text').html('\\( ' + symbol_1 + ' + ' + symbol_2 + ')_r = ' + symbol_1 + '_r + ' + symbol_2 + '_r\\)' + '<br>').styles({ 'font-size': object.font_size_normal });
-  object.div.append('text').html('\\(  ' + symbol_1 + ' + ' + symbol_2 + ')_\\theta = ' + symbol_1 + '_\\theta + ' + symbol_2 + '_\\theta\\)').styles({ 'font-size': object.font_size_normal });
+  object.div.append('text').html('\\( ' + symbol_1 + ' - ' + symbol_2 + ')_r = ' + symbol_1 + '_r - ' + symbol_2 + '_r\\)' + '<br>').styles({ 'font-size': object.font_size_normal });
+  object.div.append('text').html('\\(  ' + symbol_1 + ' - ' + symbol_2 + ')_\\theta = ' + symbol_1 + '_\\theta - ' + symbol_2 + '_\\theta\\)').styles({ 'font-size': object.font_size_normal });
   MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
   setTimeout(() => {
     object.div.styles({ 'display': 'none' });

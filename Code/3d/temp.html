@@ -175,15 +175,10 @@ function update(){
 
     //B. Tween the wrapper
     //1. tween the first segment of each side
-    // Changed variable names to complex notation
-    const z_r = Math.cos(tween.angle);
-    const z_θ = Math.sin(tween.angle);
-    
     var w=wrapper.geometry.vertices;
-    // Update wrapper geometry using complex components
-    w[2].x = w[3].x = w[4].x = w[5].x = -z_θ * segLength;
-    w[2].z = w[3].z = z_r * segLength;
-    w[4].z = w[5].z = -z_r * segLength;
+    w[2].x=w[3].x=w[4].x=w[5].x=-Math.sin(tween.angle)*segLength;
+    w[2].z=w[3].z=Math.cos(tween.angle)*segLength;
+    w[4].z=w[5].z=-Math.cos(tween.angle)*segLength;
 
     //2. rest of the vertex can now refer to the fourth previous vertex, their reference in the algorithm
     var updateWrapper=function(vIndex){
