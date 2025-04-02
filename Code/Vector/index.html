@@ -60,6 +60,27 @@
 
 </script>
 
+<button
+id="flipVectorBtn"
+style="
+  position: fixed;
+  bottom: 40px;
+  right: 20px;
+  padding: 10px;
+  font-size: 16px;
+"
+onclick="onFlipVector()"
+>
+Flip The second Number
+</button>
+<script>
+function onFlipVector() {
+  if (window.currentAddition) {
+    window.currentAddition.flip_vector();
+  }
+}
+</script>
+
     <link rel="stylesheet" type="text/css" href="stylesheet.css" />
     <link
       rel="stylesheet"
@@ -67,9 +88,9 @@
     />
 
 <body>
-  <button id="flipVectorButton" style="position: absolute; top: 10px; left: 10px; z-index: 1000;">
+  <!-- <button id="flipVectorButton" style="position: absolute; top: 10px; left: 10px; z-index: 1000;">
     Flip Vector (Subtraction Mode)
-  </button>
+  </button> -->
 </body>
 
     <script type="text/javascript">
