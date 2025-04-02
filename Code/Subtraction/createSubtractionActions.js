@@ -1,278 +1,385 @@
-var create_Addition_Events = function(){
-  this.create_Vector_1_Events = create_Vector_1_Events;
-  this.create_Vector_1_Events();
-  this.create_Vector_2_Events = create_Vector_2_Events;
-  this.create_Vector_2_Events();
-  this.create_Resultant_Events = create_Resultant_Events;
-  this.create_Resultant_Events();
+/********************************************************************************************************/
+// Recombine added vector From Componentised form
+
+var done_addition = function(){
+  window.currentAddition = null; // Add this line
+  if(navigator.vibrate){ navigator.vibrate([50]); }
+  var object = this, vector_1 = this.vector_1, vector_2 = this.vector_2, resultant = this.resultant;
+
+  var temp_list = [ vector_1.container, vector_2.container, resultant.container, object.done_addition_button.image, resultant.movement_circle, resultant.centre_control_circle_1 ];
+  for(i in temp_list){ temp_list[i].styles({ "display": "none" }); }
+
+  var temp_vector = new createVector({
+    parent: resultant.parent,
+    cx: resultant.cx,
+    cy: resultant.cy,
+    r: resultant.r,
+    angle_rad: resultant.angle_rad,
+    manipulationPossible: true,
+    manipulables: { r: true, angle: true, xComponent: true, yComponent: true },
+    resolution_allowed: true,
+    movementAllowed: true,
+    vector_mode: "polar",               // "cartesian", "polar"
+    cartesian_mode_controls: "polar",   // "cartesian", "polar"
+    vectorID: resultant.vectorID,
+    addedVectors: false
+  })
+  resultant.parent.vector_list.push(temp_vector);
+
+  // if(vector_1.taskScreen == true){
+  //   // vector_1.screen_data.vectorID = vectorID;
+  //   vector_1.screen_data.vector_list.push(temp_vector);
+  // }
+
 }
 
 /********************************************************************************************************/
-// create_Resultant_Events
+// Recombine added vector From Componentised form
 
-var create_Resultant_Events = function(){
+var recombine_added_vector = function(){
+  // if(navigator.vibrate){ navigator.vibrate([50]); }
+
+  setTimeout(() => {
+    this.div.styles({ 'display': 'none' });
+  }, 2000);
+
+  this.componentized = false;
+
+  /*************************** Vector 1 **************************************/
+  var vector_1 = this.vector_1;
+
+  vector_1.yComponent_line
+    .transition().delay(0).duration(1000)
+    .attrs({ x1: vector_1.xComponent_length, x2: vector_1.xComponent_length })
+    .transition().delay(500).duration(500)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).duration(0)
+    .styles({ "opacity": 1, "display": "none" });
+
+  vector_1.xComponent_line
+    .transition().delay(1500).duration(500)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).duration(0)
+    .styles({ "opacity": 1, "display": "none" });
+
+  vector_1.vector_line
+    .styles({ "opacity": 0, "display": null })
+    .transition().delay(1000).duration(500)
+    .styles({ "opacity": 1 });
+
+  vector_1.vector_line_dotted
+    .transition().delay(1500).duration(0)
+    .styles({ "display": "none" });
+
+  vector_1.vector_head_circle
+    .transition().delay(1500).duration(0)
+    .styles({ "display": "none" });
+
+  /*************************** Vector 2 **************************************/
+  var vector_2 = this.vector_2;
+
+  vector_2.yComponent_line
+    .transition().delay(0).duration(1000)
+    .attrs({ x1: vector_2.xComponent_length, x2: vector_2.xComponent_length })
+    .transition().delay(500).duration(1000)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).duration(0)
+    .styles({ "opacity": 1, "display": "none" });
+
+  vector_2.xComponent_line
+    .transition().delay(0).duration(1000)
+    .attrs({ y1: 0, y2: 0 })
+    .transition().delay(500).duration(1000)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).duration(0)
+    .styles({ "opacity": 1, "display": "none" });
+
+  vector_2.vector_line
+    .styles({ "opacity": 0, "display": null })
+    .transition().delay(1000).duration(500)
+    .styles({ "opacity": 1 });
+
+  vector_2.vector_line_dotted
+    .transition().delay(1500).duration(0)
+    .styles({ "display": "none" });
+
+  vector_2.vector_head_circle
+    .transition().delay(1500).duration(0)
+    .styles({ "display": "none" });
+
+  /*************************** Resultant **************************************/
   var resultant = this.resultant;
-  var object = this;
 
-  /*************************** Long Press on Centre Events ***************************/
+  resultant.vector_line
+    .styles({ "display": null, "opacity": 0 })
+    // .attrs({ x2: 0, y2: 0 })
+    .transition().delay(2500).duration(500)
+    .styles({ "opacity": 1 })
+    // .transition().delay(0).duration(500)
+    // .attrs({ x2: resultant.xComponent_length, y2: -resultant.yComponent_length });
 
-  object.dispatch = d3.dispatch("long_press");
-  object.dispatch.on("long_press", function(){
-    if(object.manipulationMode == true && object.componentized == false && resultant.change_mode_allowed == true){ object.toggle_addition_mode(); }
-    if(object.manipulationMode == false){
+  resultant.xComponent_triangle
+    .transition().delay(3000).duration(500)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).delay(0)
+    .styles({ "opacity": 1, "display": "none" });
 
-    object.done_addition_button.shown = true;
-    object.done_addition_button.image
-      .attrs({ x: resultant.cx, y: resultant.cy, width: 0, height: 0 })
-      .transition().duration(1000)
-      .attrs({ x: resultant.cx+object.done_addition_button.posX-0.5*object.done_addition_button.size, y: resultant.cy+object.done_addition_button.posY-0.5*object.done_addition_button.size, width: object.done_addition_button.size, height: object.done_addition_button.size });
+  resultant.yComponent_triangle
+    .transition().delay(3000).duration(500)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).delay(0)
+    .styles({ "opacity": 1, "display": "none" });
 
-    }
-  })
+  resultant.xProjection_line
+    .transition().delay(3000).duration(500)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).delay(0)
+    .styles({ "opacity": 1, "display": "none" });
 
-  /*************************** Vector Resolve Rect Events ***************************/
+  resultant.yProjection_line
+    .transition().delay(3000).duration(500)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).delay(0)
+    .styles({ "opacity": 1, "display": "none" });
 
-  resultant.vector_resolve_rect.styles({ "display": null });
+  resultant.vector_head_circle
+    .transition().delay(3000).duration(500)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).delay(0)
+    .styles({ "opacity": 1, "display": "none" });
 
-  var tempArray = [], temp_resolved = false;
+  setTimeout(function(){
+    vector_1.text_2.text.styles({ "display": null });
+    vector_1.text_2.textBox.styles({ "display": null });
+    vector_1.text_3.text.styles({ "display": "none" });
+    vector_1.text_3.textBox.styles({ "display": "none" });
 
-  resultant.vector_resolve_rect.on("touchstart", function(d){
-    tempArray = [];
-    temp_resolved = false;
-    if(d3.event.targetTouches.length == 2 && object.addition_mode == "triangle" && object.componentized == false && d.resolution_allowed){
-      d3.selectAll(".projection_"+d.vectorID).styles({ "display": null });
-    }
-    else if(object.componentized == false){
-       d3.selectAll(".projection_"+d.vectorID).styles({ "display": "none" });
-     }
-  })
+    vector_2.text_2.text.styles({ "display": null });
+    vector_2.text_2.textBox.styles({ "display": null });
+    vector_2.text_3.text.styles({ "display": "none" });
+    vector_2.text_3.textBox.styles({ "display": "none" });
 
-  resultant.vector_resolve_rect.on("touchmove", function(d){
-    if(d3.event.targetTouches.length == 2){
-      tempArray.push(d3.event);
-      if(tempArray.length > 5){ tempArray.splice(0,1); }
-      dist_1 = distpoints(tempArray[0].targetTouches[0].pageX, tempArray[0].targetTouches[0].pageY, tempArray[0].targetTouches[1].pageX, tempArray[0].targetTouches[1].pageY);
-      dist_2 = distpoints(tempArray[tempArray.length-1].targetTouches[0].pageX, tempArray[tempArray.length-1].targetTouches[0].pageY, tempArray[tempArray.length-1].targetTouches[1].pageX, tempArray[tempArray.length-1].targetTouches[1].pageY);
-      temp_speed = (dist_1-dist_2)/(tempArray[0].timeStamp-tempArray[tempArray.length-1].timeStamp);
-      if(temp_speed > 0.4 && !temp_resolved && d.resolution_allowed && object.addition_mode == "triangle" && object.componentized == false){ object.resolve_added_vector(); temp_resolved = true; }
-    } else{ tempArray = []; }
-  })
-
-  resultant.vector_resolve_rect.on("touchend", function(d){
-    if(object.componentized == false){ d3.selectAll(".projection_"+d.vectorID).styles({ "display": "none" }); }
-    tempArray = [];
-    temp_resolved = false;
-  })
-
-  /*************************** Centre control circle Events ***************************/
-
-  resultant.centre_control_circle_1.on("touchstart", function(){
-    d3.select(this).styles({ "fill-opacity": 0.3 });
-    object.timer = setTimeout(function(){ object.dispatch.call("long_press", this, {}); }, 600);
-    if(object.manipulationMode == true && object.componentized == true){
-      resultant.recombine_vector_circle = resultant.parent.canvas.append("circle")
-        .styles({ "fill": resultant.gray_color, "fill-opacity": 0.2 })
-        .attrs({ cx: resultant.xComponent_coordinate, cy: resultant.yComponent_coordinate, r: resultant.control_circle_radius })
-        .on("touchstart", function(){ clearTimeout(object.timer); object.recombine_added_vector(); })
-    }
-  })
-
-  resultant.centre_control_circle_1.on("touchend", function(){
-    d3.select(this).styles({ "fill-opacity": 0 });
-    clearTimeout(object.timer);
-    if(resultant.recombine_vector_circle){ resultant.recombine_vector_circle.remove(); }
-
-    var button = object.done_addition_button;
-    if(button.active == false){
-      button.shown = false;
-      button.image
-      .transition().duration(1000)
-      .attrs({ width: 0, height: 0, x: resultant.cx, y: resultant.cy });
-    } else {
-      object.done_addition();
-    }
-  })
-
-  resultant.centre_control_circle_1.on("touchmove", function(){
-    var button = object.done_addition_button;
-    if(button.shown == true){
-      var temp_dist = distpoints(d3.event.targetTouches[0].pageX, d3.event.targetTouches[0].pageY, resultant.cx+button.posX, resultant.cy+button.posY);
-      if(temp_dist < 0.5*button.size){ button.active = true } else { button.active = false; }
-      if(button.active == true){ button.image.attrs({ x: resultant.cx+button.posX-0.5*button.size_big, y: resultant.cy+button.posY-0.5*button.size_big, width: button.size_big, height: button.size_big }) }
-      else { button.image.attrs({ x: resultant.cx+button.posX-0.5*button.size, y: resultant.cy+button.posY-0.5*button.size, width: button.size, height: button.size }) }
-    }
-  })
-
-  resultant.centre_control_circle_1.on("click", function(){
-    object.manipulationMode = !object.manipulationMode;
-    if(object.manipulationMode == true){
-      object.resultant.movement_circle.styles({ "display": "none" });
-      object.resultant.circle.styles({ "fill-opacity": 0.1 });
-    } else {
-      object.resultant.movement_circle.styles({ "display": null });
-      object.resultant.circle.styles({ "fill-opacity": 0 });
-    }
-  })
-
-  /*************************** Movement circle Events ***************************/
-
-  var drag_movement_circle = d3.drag();
-  resultant.movement_circle.call(drag_movement_circle);
-
-  drag_movement_circle.on("start", function(d){
-    if(d3.event.sourceEvent.type == "touchstart"){
-      d.temp_pos = {};
-      d.temp_pos.x = d3.event.sourceEvent.targetTouches[0].pageX;
-      d.temp_pos.y = d3.event.sourceEvent.targetTouches[0].pageY;
-      d.temp_pos.cx = d.cx;
-      d.temp_pos.cy = d.cy;
-    }
-  })
-
-  drag_movement_circle.on("drag", function(d){
-    if(d3.event.sourceEvent.type == "touchmove"){
-      d.cx = d.temp_pos.cx + (d3.event.sourceEvent.targetTouches[0].pageX - d.temp_pos.x);
-      d.cy = d.temp_pos.cy + (d3.event.sourceEvent.targetTouches[0].pageY - d.temp_pos.y);
-      object.vector_1.cx = d.cx;
-      object.vector_1.cy = d.cy;
-      object.update_Added_vectors();
-    }
-  })
+    resultant.text_2.text.styles({ "display": null });
+    resultant.text_2.textBox.styles({ "display": null });
+    resultant.text_3.text.styles({ "display": "none" });
+    resultant.text_3.textBox.styles({ "display": "none" });
+  }, 3500)
 
 }
 
 /********************************************************************************************************/
-// create_Vector_1_Events
+// Resolve Added Vector into components
 
-var create_Vector_1_Events = function(){
-  vector_1 = this.vector_1;
-  vector_1.angle_control_line.styles({ "display": null });
-  vector_1.radius_control_circle.styles({ "display": null });
+var resolve_added_vector = function(){
+  // if(navigator.vibrate){ navigator.vibrate([50]); }
 
-  var object = this;
+  setTimeout(() => {
+    this.div.styles({ 'display': none });
+  }, 2000);
 
-  /*************************** Angle control line Events ***************************/
+  this.componentized = true;
 
-  var angle_control_line_drag = d3.drag();
-  vector_1.angle_control_line.call(angle_control_line_drag);
+  /*************************** Vector 1 **************************************/
+  var vector_1 = this.vector_1;
+  // d3.selectAll(".projection_"+vector_1.vectorID).styles({ "display": null });
+  vector_1.xComponent_triangle.styles({ "display": "none" });
+  vector_1.yComponent_triangle.styles({ "display": "none" });
 
-  angle_control_line_drag.on("start", function(d){
-    if(d3.event.sourceEvent.type == "touchstart"){
-      // if(navigator.vibrate){ navigator.vibrate([25]); }
-      d3.select(this).attr("class", "visible");
-      // d.circle.styles({ "display": null, "fill-opacity": 0.3 });
-    }
-  })
+  vector_1.xComponent_line
+    .styles({ "display": null, "opacity": 0 })
+    .attrs({ x1: 0, y1: 0, x2: vector_1.xComponent_length, y2: 0 })
+    .transition().delay(0).duration(1500)
+    .styles({ "opacity": 1 });
 
-  angle_control_line_drag.on("drag", function(d){
-    if(d3.event.sourceEvent.type == "touchmove"){
-      temp_angle_rad = Math.atan2(-d3.event.y, d3.event.x);
-      if( !isNaN(temp_angle_rad) ){ d.angle_rad = temp_angle_rad; }
-      object.update_Added_vectors();
-    }
-  })
+  vector_1.yComponent_line
+    .styles({ "display": null, "opacity": 0 })
+    .attrs({ x1: vector_1.xComponent_length, y1: 0, x2: vector_1.xComponent_length, y2: -vector_1.yComponent_length })
+    .transition().delay(0).duration(1500)
+    .styles({ "opacity": 1 })
+    .transition().delay(0).duration(1500)
+    .attrs({ x1: 0, x2: 0 });
 
-  angle_control_line_drag.on("end", function(d){
-    d3.select(this).attr("class", "invisible");
-    // d.circle.styles({ "display": "none" });
-  })
+  vector_1.vector_line
+    .styles({ "display": null })
+    .transition().delay(1000).duration(1000)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).duration(0)
+    .styles({ "opacity": 1, "display": "none" });
 
-  /*************************** Radius control circle Events ***************************/
+    vector_1.vector_line_dotted.styles({ "display": null });
+    vector_1.vector_head_circle.styles({ "display": null });
 
-  var radius_control_circle_drag = d3.drag();
-  vector_1.radius_control_circle.call(radius_control_circle_drag);
+  // vector_1.xProjection_circle
+  //   .transition().delay(3000).duration(1000)
+  //   .styles({ "opacity": 0 })
+  //   .transition().delay(0).duration(0)
+  //   .styles({ "display": "none", "opacity": 1 });
+  //
+  // vector_1.yProjection_circle
+  //   .transition().delay(3000).duration(1000)
+  //   .styles({ "opacity": 0 })
+  //   .transition().delay(0).duration(0)
+  //   .styles({ "display": "none", "opacity": 1 });
 
-  radius_control_circle_drag.on("start", function(d){
-    if(d3.event.sourceEvent.type == "touchstart"){
-      // if(navigator.vibrate){ navigator.vibrate([25]); }
-      d3.select(this).attr("class", "visible");
-      // d.circle.styles({ "display": null, "fill-opacity": 0.3 });
-      d.temp_pos = {};
-      d.temp_pos.dist = distpoints(0,0, d3.event.x, d3.event.y);
-      d.temp_pos.r = d.r;
-    }
-  })
+  // vector_1.xProjection_line
+  //   .transition().delay(3000).duration(1000)
+  //   .styles({ "opacity": 0 })
+  //   .transition().delay(0).duration(0)
+  //   .styles({ "display": "none", "opacity": 1 });
+  //
+  // vector_1.yProjection_line
+  //   .transition().delay(3000).duration(1000)
+  //   .styles({ "opacity": 0 })
+  //   .transition().delay(0).duration(0)
+  //   .styles({ "display": "none", "opacity": 1 });
 
-  radius_control_circle_drag.on("drag", function(d){
-    if(d3.event.sourceEvent.type == "touchmove"){
-      temp_dist = distpoints(0,0, d3.event.x, d3.event.y);
-      temp_r = d.temp_pos.r + (temp_dist - d.temp_pos.dist);
-      if( !isNaN(temp_r) && temp_r >= 0 ){ d.r = temp_r; }
-      object.update_Added_vectors();
-    }
-  })
+    /*************************** Vector 2 **************************************/
+    var vector_2 = this.vector_2;
+    // d3.selectAll(".projection_"+vector_2.vectorID).styles({ "display": null });
+    vector_2.xComponent_triangle.styles({ "display": "none" });
+    vector_2.yComponent_triangle.styles({ "display": "none" });
 
-  radius_control_circle_drag.on("end", function(d){
-    d3.select(this).attr("class", "invisible");
-    // d.circle.styles({ "display": "none" });
-  })
+    vector_2.xComponent_line
+      .styles({ "display": null, "opacity": 0 })
+      .attrs({ x1: 0, y1: 0, x2: vector_2.xComponent_length, y2: 0 })
+      .transition().delay(0).duration(1500)
+      .styles({ "opacity": 1 })
+      .transition().delay(0).duration(1500)
+      .attrs({ y1: vector_1.yComponent_length, y2: vector_1.yComponent_length });
+
+    vector_2.yComponent_line
+      .styles({ "display": null, "opacity": 0 })
+      .attrs({ x1: vector_2.xComponent_length, y1: 0, x2: vector_2.xComponent_length, y2: -vector_2.yComponent_length })
+      .transition().delay(0).duration(1500)
+      .styles({ "opacity": 1 })
+      .transition().delay(0).duration(1500)
+      .attrs({ x1: -vector_1.xComponent_length, x2: -vector_1.xComponent_length });
+
+    vector_2.vector_line
+      .styles({ "display": null })
+      .transition().delay(1000).duration(1000)
+      .styles({ "opacity": 0 })
+      .transition().delay(0).duration(0)
+      .styles({ "opacity": 1, "display": "none" });
+
+      vector_2.vector_line_dotted.styles({ "display": null });
+      vector_2.vector_head_circle.styles({ "display": null });
+
+    // vector_2.xProjection_circle
+    //   .attrs({ cx: vector_2.xComponent_length, cy: 0 })
+    //   .transition().delay(3000).duration(1000)
+    //   .styles({ "opacity": 0 })
+    //   .transition().delay(0).duration(0)
+    //   .styles({ "display": "none", "opacity": 1 });
+    //
+    // vector_2.yProjection_circle
+    //   .attrs({ cx: 0, cy: -vector_2.yComponent_length })
+    //   .transition().delay(3000).duration(1000)
+    //   .styles({ "opacity": 0 })
+    //   .transition().delay(0).duration(0)
+    //   .styles({ "display": "none", "opacity": 1 });
+    //
+    // vector_2.xProjection_line
+    //   .attrs({ x1: 0, x2: 0 })
+    //   .transition().delay(3000).duration(1000)
+    //   .styles({ "opacity": 0 })
+    //   .transition().delay(0).duration(0)
+    //   .styles({ "display": "none", "opacity": 1 });
+    //
+    // vector_2.yProjection_line
+    //   .attrs({ y1: 0, y2: 0 })
+    //   .transition().delay(3000).duration(1000)
+    //   .styles({ "opacity": 0 })
+    //   .transition().delay(0).duration(0)
+    //   .styles({ "display": "none", "opacity": 1 });
+
+  /*************************** Resultant **************************************/
+  var resultant = this.resultant;
+
+  var temp_len = parseInt(resultant.centre_circle.attr("r"));
+  resultant.centre_circle
+    .transition().delay(0).duration(200)
+    .attrs({ r: 2*temp_len })
+    .transition().delay(50).duration(150)
+    .attrs({ r: temp_len });
+
+  resultant.vector_line
+    .transition().delay(2500).duration(1000)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).duration(0)
+    .styles({ "display": "none", "opacity": 1 });
+
+  resultant.xProjection_circle
+    .transition().delay(2500).duration(1000)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).duration(0)
+    .styles({ "display": "none", "opacity": 1 });
+
+  resultant.yProjection_circle
+    .transition().delay(2500).duration(1000)
+    .styles({ "opacity": 0 })
+    .transition().delay(0).duration(0)
+    .styles({ "display": "none", "opacity": 1 });
+
+  setTimeout(function(){
+    vector_1.text_2.text.styles({ "display": "none" });
+    vector_1.text_2.textBox.styles({ "display": "none" });
+    vector_1.text_3.text.styles({ "display": null });
+    vector_1.text_3.textBox.styles({ "display": null });
+
+    vector_2.text_2.text.styles({ "display": "none" });
+    vector_2.text_2.textBox.styles({ "display": "none" });
+    vector_2.text_3.text.styles({ "display": null });
+    vector_2.text_3.textBox.styles({ "display": null });
+
+    resultant.text_2.text.styles({ "display": "none" });
+    resultant.text_2.textBox.styles({ "display": "none" });
+    resultant.text_3.text.styles({ "display": null });
+    resultant.text_3.textBox.styles({ "display": null });
+  }, 3500)
 
 }
 
 /********************************************************************************************************/
-// create_Vector_2_Events()
+// Toggle Addition Mode between "triangle" and "parallelogram"
 
-var create_Vector_2_Events = function(){
-  vector_2 = this.vector_2;
-  vector_2.angle_control_line.styles({ "display": null });
-  vector_2.radius_control_circle.styles({ "display": null });
+var toggle_addition_mode = function(){
+  // if(navigator.vibrate){ navigator.vibrate([50]); }
 
-  var object = this;
+  var object = this, vector_2 = this.vector_2, vector_1 = this.vector_1;
 
-  /*************************** Angle control line Events ***************************/
+  if(object.addition_mode == "triangle"){
+    object.addition_mode = "parallelogram";
+    vector_2.vector_line
+      .transition().delay(0).duration(1000)
+      .attrs({ x1: 0 - vector_1.xComponent_length, y1: 0 + vector_1.yComponent_length, x2: vector_2.xComponent_length - vector_1.xComponent_length, y2: -vector_2.yComponent_length + vector_1.yComponent_length});
 
-  var angle_control_line_drag = d3.drag();
-  vector_2.angle_control_line.call(angle_control_line_drag);
+    object.vector_2_dotted_line.styles({ "display": null });
+    object.vector_1_dotted_line
+      .styles({ "display": null })
+      .attrs({ x1: 0, y1: 0, x2: 0+this.vector_1.xComponent_length, y2: 0-this.vector_1.yComponent_length })
+      .transition().delay(1000).duration(1000)
+      .attrs({ x1: this.vector_2.xComponent_length, y1: -this.vector_2.yComponent_length, x2: this.vector_2.xComponent_length+this.vector_1.xComponent_length, y2: -this.vector_2.yComponent_length-this.vector_1.yComponent_length })
 
-  angle_control_line_drag.on("start", function(d){
-    if(d3.event.sourceEvent.type == "touchstart"){
-      // if(navigator.vibrate){ navigator.vibrate([25]); }
-      d3.select(this).attr("class", "visible");
-      // d.circle.styles({ "display": null, "fill-opacity": 0.3 });
-    }
-  })
+    setTimeout(function(){ object.update_Added_vectors(); }, 2100);
 
-  angle_control_line_drag.on("drag", function(d){
-    if(d3.event.sourceEvent.type == "touchmove"){
-      temp_angle_rad = Math.atan2(-d3.event.y, d3.event.x);
-      if( !isNaN(temp_angle_rad) ){ d.angle_rad = temp_angle_rad; }
-      object.update_Added_vectors();
-    }
-  })
+  } else {
+    object.addition_mode = "triangle";
 
-  angle_control_line_drag.on("end", function(d){
-    d3.select(this).attr("class", "invisible");
-    // d.circle.styles({ "display": "none" });
-  })
+    object.vector_1_dotted_line
+      .transition().delay(0).duration(1000)
+      .attrs({ x1: 0, y1: 0, x2: 0+this.vector_1.xComponent_length, y2: 0-this.vector_1.yComponent_length })
+      .transition().delay(0).duration(0)
+      .styles({ "display": "none" });
 
-  /*************************** Radius control circle Events ***************************/
+    vector_2.vector_line
+      .transition().delay(1000).duration(1000)
+      .attrs({ x1: vector_1.xComponent_length, y1: -vector_1.yComponent_length, x2: vector_2.xComponent_length + vector_1.xComponent_length, y2: -vector_2.yComponent_length - vector_1.yComponent_length });
 
-  var radius_control_circle_drag = d3.drag();
-  vector_2.radius_control_circle.call(radius_control_circle_drag);
+    object.vector_2_dotted_line
+      .transition().delay(2000).duration(0)
+      .styles({ "display": "none" });
 
-  radius_control_circle_drag.on("start", function(d){
-    if(d3.event.sourceEvent.type == "touchstart"){
-      // if(navigator.vibrate){ navigator.vibrate([25]); }
-      d3.select(this).attr("class", "visible");
-      // d.circle.styles({ "display": null, "fill-opacity": 0.3 });
-      d.temp_pos = {};
-      d.temp_pos.dist = distpoints(0,0, d3.event.x, d3.event.y);
-      d.temp_pos.r = d.r;
-    }
-  })
-
-  radius_control_circle_drag.on("drag", function(d){
-    if(d3.event.sourceEvent.type == "touchmove"){
-      temp_dist = distpoints(0,0, d3.event.x, d3.event.y);
-      temp_r = d.temp_pos.r + (temp_dist - d.temp_pos.dist);
-      if( !isNaN(temp_r) && temp_r >= 0 ){ d.r = temp_r; }
-      object.update_Added_vectors();
-    }
-  })
-
-  radius_control_circle_drag.on("end", function(d){
-    d3.select(this).attr("class", "invisible");
-    // d.circle.styles({ "display": "none" });
-  })
-
+    setTimeout(function(){ object.update_Added_vectors(); }, 2100);
+  }
 }

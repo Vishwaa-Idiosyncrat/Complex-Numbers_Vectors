@@ -1,29 +1,30 @@
-createVector.prototype.subtractVectors = function(){
+createVector.prototype.addVectors = function(){
   var object = new Object();
   if(navigator.vibrate){ navigator.vibrate([50]); }
 
   object.resultant = this.create_Resultant();
   object.vector_2 = this.create_Vector_2(object.resultant);
-
-  console.log("Flip button clickeddddd!");
-    // Flip the second vector's angle to represent subtraction (i.e. -w)
-  d3.select("#flipVectorButton").on("click", function() {
-    object.resultant.angle_rad += Math.PI;
-    object.resultant.angle_deg = object.vector_2.angle_rad * 180 / Math.PI;
-    object.resultant.update();
-    // object.update_Added_vectors();
-    // object.resultant.update();
-  });
-  
   object.vector_1 = this.create_Vector_1(object.resultant, object.vector_2);
 
   // if(object.vector_1.taskScreen == true){
   //   object.vector_1.screen_data.vectorID = vectorID;
   // }
 
+  object.flip_vector = function() {
+    // Flip vector_2's direction by adding π radians
+    this.vector_2.angle_rad += Math.PI;
+    // Ensure angle stays within [0, 2π)
+    this.vector_2.angle_rad %= (2 * Math.PI);
+    this.vector_2.update();
+    // this.update_Added_vectors();
+    // this.resultant.update();
+  };
+
+  
   object.resultant.object = object;
   object.vector_1.object = object;
   object.vector_2.object = object;
+  window.currentAddition = object; 
 
   object.addition_mode = "triangle";
   object.manipulationMode = true;
@@ -77,8 +78,8 @@ createVector.prototype.subtractVectors = function(){
 
   var symbol_1 = object.vector_1.symbol, symbol_2 = object.vector_2.symbol, symbol_r = object.resultant.symbol;
   object.div = d3.select('body').append('div').styles({ 'font-size': object.font_size_normal, 'position': 'absolute' });
-  object.div.append('text').html('\\( ' + symbol_1 + ' - ' + symbol_2 + ')_r = ' + symbol_1 + '_r - ' + symbol_2 + '_r\\)' + '<br>').styles({ 'font-size': object.font_size_normal });
-  object.div.append('text').html('\\(  ' + symbol_1 + ' - ' + symbol_2 + ')_\\theta = ' + symbol_1 + '_\\theta - ' + symbol_2 + '_\\theta\\)').styles({ 'font-size': object.font_size_normal });
+  object.div.append('text').html('\\( ' + symbol_1 + ' + ' + symbol_2 + ')_r = ' + symbol_1 + '_r + ' + symbol_2 + '_r\\)' + '<br>').styles({ 'font-size': object.font_size_normal });
+  object.div.append('text').html('\\(  ' + symbol_1 + ' + ' + symbol_2 + ')_\\theta = ' + symbol_1 + '_\\theta + ' + symbol_2 + '_\\theta\\)').styles({ 'font-size': object.font_size_normal });
   MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
   setTimeout(() => {
     object.div.styles({ 'display': 'none' });
@@ -113,6 +114,12 @@ var update_Added_vectors = function(){
 
   var xComponent_length = this.vector_1.xComponent_length + this.vector_2.xComponent_length;
   var yComponent_length = this.vector_1.yComponent_length + this.vector_2.yComponent_length;
+  
+  
+  // var xComponent_length = this.vector_1.xComponent_length + this.vector_2.getXComponent();
+  // var yComponent_length = this.vector_1.yComponent_length + this.vector_2.getYComponent();
+
+  
   var r = Math.sqrt( xComponent_length*xComponent_length + yComponent_length*yComponent_length );
   var angle_rad = Math.atan2(yComponent_length, xComponent_length);
   this.resultant.r = r;
@@ -259,12 +266,3 @@ createVector.prototype.create_Vector_1 = function(resultant, vector_2){
   temp_vector.vector_line.attrs({ "marker-end": "url(#arrow_component_" +temp_vector.vectorID+ ")" });
   return(temp_vector);
 }
-
-document.addEventListener("DOMContentLoaded", function() {
-  console.log("DOM fully loaded, attaching event listener.");
-  d3.select("#flipVectorButton").on("click", function() {
-    console.log("Flip button clicked!");
-  });
-});
-
-
